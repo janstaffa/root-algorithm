@@ -1,17 +1,21 @@
 # root-fn
-A square root function implementation in Rust.
 
-note: *this is my own algorithm not meant to be efficent or fast, for production code use the function provided by Rust instead*
+A root algorithm implementation in Rust.
 
+note: _this is my own algorithm not meant to be efficent or fast, for production code use the function provided by Rust instead_
 
 ## usage:
-```rust
-use root_fn::sqrt;
 
-let result = sqrt(4);
+```rust
+use root_fn::root;
+
+// third root of 8
+let result = root(8, 3);
 asssert_eq!(result, 2);
 ```
+
 ## CLI:
+
 ```rust
 // preview / development
 cargo run

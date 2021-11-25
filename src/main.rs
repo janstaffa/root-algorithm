@@ -9,13 +9,13 @@ fn main() {
 
         stdin()
             .read_line(&mut input)
-            .expect("Didn't enter a valid string.");
+            .expect("Invalid input.");
 
         let input_number: f32 = input.trim().parse().unwrap();
         println!(
             "=> root of {} is {}",
             input.trim(),
-            rootfn::sqrt(input_number)
+            rootfn::root(input_number, 2)
         );
     }
 }

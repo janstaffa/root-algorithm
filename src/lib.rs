@@ -1,58 +1,29 @@
 pub mod rootfn {
 
-    const MAX_PRECISION: f32 = 0.001;
-    const SPLITS_PER_CYCLE: u16 = 10;
-    const MAX_RECURSION_DEPTH: u8 = 10;
+    const MAX_RECURSION_DEPTH: u8 = 100;
 
-    pub fn sqrt(number: f32) -> f32 {
+    pub fn root(number: f32, power: u32) -> f32 {
         if number < 0.0 {
             panic!("Invalid input.");
         }
-        fn cycle(from: f32, to: f32, depth: u8, original_number: f32) -> f32 {
+        fn cycle(from: f32, to: f32, depth: u8, original_number: f32, power: u32) -> f32 {
             let difference = to - from;
-            let step = difference / SPLITS_PER_CYCLE as f32;
-            let mut count = from;
-            let mut best_count = to;
+            let calc = from + difference / 2.0;
 
-            let mut iter = 0;
-            while count < to {
-                if iter > SPLITS_PER_CYCLE {
-                    break;
-                }
-                let powered = count.powi(2);
-                let difference = original_number - powered;
-
-                let best_count_difference = original_number - best_count.powi(2);
-                if difference.abs() < best_count_difference.abs() {
-                    best_count = count;
-                }
-
-                if difference.abs() < MAX_PRECISION {
-                    break;
-                }
-                count += step;
-                iter += 1;
+            if depth == 0{
+                return calc;
             }
-
-            if depth > 0 && step > MAX_PRECISION {
-                let prev_count = best_count - step;
-                let next_count = best_count + step;
-                let next_difference = original_number - next_count.powi(2);
-                let best_difference = original_number - best_count.powi(2);
-
-                let mut from = prev_count;
-                let mut to = best_count;
-
-                if best_difference > 0.0 && 0.0 > next_difference {
-                    from = best_count;
-                    to = next_count;
-                }
-
-                return cycle(from, to, depth - 1, original_number);
+            let powered = calc.powi(power as i32);
+            let mut next_from = from;
+            let mut next_to = calc;
+            if powered < original_number{
+                next_from = calc;
+                next_to = to;
             }
-            return best_count;
+            return cycle(next_from, next_to, depth -1, original_number, power);
+
         }
-        return cycle(0.0, number, MAX_RECURSION_DEPTH, number);
+        return cycle(0.0, number, MAX_RECURSION_DEPTH, number, power);
     }
 }
 
@@ -99,7 +70,7 @@ mod tests {
     #[test_case(11)]
     fn test_sqrt(val: i32) {
         let left = ((val as f32).sqrt() * 100.0).round() / 100.0;
-        let right = (rootfn::sqrt(val as f32) * 100.0).round() / 100.0;
+        let right = (rootfn::root(val as f32, 2) * 100.0).round() / 100.0;
         assert_eq!(left, right);
     }
 }
