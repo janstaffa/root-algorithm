@@ -16,7 +16,7 @@ asssert_eq!(result, 2);
 
 ## CLI:
 
-```rust
+```console
 // preview / development
 cargo run
 
